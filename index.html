@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>らこちのセリフボード</title>
+  <style>
+  body {
+    font-family: "Segoe UI", sans-serif;
+    background: #f9f9f9;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+  }
+
+  h1 {
+    margin-bottom: 30px;
+    color: #333;
+  }
+
+  .category {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 600px;
+  }
+
+  .category h2 {
+    margin-bottom: 15px;
+    color: #444;
+  }
+
+  .line-button {
+    display: inline-block;
+    width: 45%;
+    margin: 8px;
+    padding: 12px;
+    font-size: 15px;
+    border: none;
+    border-radius: 8px;
+    background: #fffae6;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+  }
+
+  .line-button:hover {
+    background: #ffe066;
+    transform: scale(1.05);
+  }
+  </style>
+
+</head>
+<body>
+  <h1>🦦💛 らこちのセリフボード</h1>
+  <div id="board"></div>
+
+  <script>
+    const categories = {
+      "癒し系(おやすみ・お疲れ様・よしよし・応援)": [
+        { text: "いっぱい寝てね～", file: "sounds/癒し系(おやすみ・お疲れ様・よしよし・応援)/いっぱい寝てね～.mp3" },
+        { text: "おやすみ", file: "sounds/癒し系(おやすみ・お疲れ様・よしよし・応援)/おやすみ.mp3" },
+        { text: "おやすみばいばい～", file: "sounds/癒し系(おやすみ・お疲れ様・よしよし・応援)/おやすみばいばい～.mp3" },
+        { text: "お疲れ様〜いっぱい休んでね〜", file: "sounds/癒し系(おやすみ・お疲れ様・よしよし・応援)/お疲れ様〜いっぱい休んでね〜.mp3" },
+        { text: "バイト頑張っててえらいよ～", file: "sounds/癒し系(おやすみ・お疲れ様・よしよし・応援)/バイト頑張っててえらいよ～.mp3" },
+        { text: "みんないい子だね〜", file: "sounds/癒し系(おやすみ・お疲れ様・よしよし・応援)/みんないい子だね〜.mp3" },
+        { text: "みんないい子だね〜 (2)", file: "sounds/癒し系(おやすみ・お疲れ様・よしよし・応援)/みんないい子だね〜 (2).mp3" },
+        { text: "みんながんばっててえらい", file: "sounds/癒し系(おやすみ・お疲れ様・よしよし・応援)/みんながんばっててえらい.mp3" },
+        { text: "みんなばいばい～", file: "sounds/癒し系(おやすみ・お疲れ様・よしよし・応援)/みんなばいばい～.mp3" },
+        { text: "よしよしヾ(・ω・｀)", file: "sounds/癒し系(おやすみ・お疲れ様・よしよし・応援)/よしよしヾ(・ω・｀).mp3" },
+        { text: "月曜日からがんばっててえらい", file: "sounds/癒し系(おやすみ・お疲れ様・よしよし・応援)/月曜日からがんばっててえらい.mp3" },
+        { text: "仕事の人、学校の人、頑張ってね〜", file: "sounds/癒し系(おやすみ・お疲れ様・よしよし・応援)/仕事の人、学校の人、頑張ってね〜.mp3" },
+        { text: "休みな人～いっぱい休んでね", file: "sounds/癒し系(おやすみ・お疲れ様・よしよし・応援)/休みな人～いっぱい休んでね.mp3" },
+        { text: "頑張っててえらい", file: "sounds/癒し系(おやすみ・お疲れ様・よしよし・応援)/頑張っててえらい.mp3" },
+        { text: "頑張れ〜えらい〜頑張れ〜", file: "sounds/癒し系(おやすみ・お疲れ様・よしよし・応援)/頑張れ〜えらい〜頑張れ〜.mp3" }
+      ],
+      "🚼5ちゃい": [
+        { text: "5ちゃいじゃありません", file: "sounds/5ちゃい/5ちゃいじゃありません.mp3" },
+        { text: "20ピーさいです", file: "sounds/5ちゃい/20ピーさいです.mp3" },
+        { text: "20ピーさいです (2)", file: "sounds/5ちゃい/20ピーさいです (2).mp3" },
+        { text: "お腹すいた", file: "sounds/5ちゃい/お腹すいた.mp3" },
+        { text: "お腹すいた (2)", file: "sounds/5ちゃい/お腹すいた (2).mp3" },
+        { text: "お腹すいた (3)", file: "sounds/5ちゃい/お腹すいた (3).mp3" },
+        { text: "お腹すいた (4)", file: "sounds/5ちゃい/お腹すいた (4).mp3" },
+        { text: "お腹すいた (5)", file: "sounds/5ちゃい/お腹すいた (5).mp3" },
+        { text: "お腹すいてる", file: "sounds/5ちゃい/お腹すいてる.mp3" },
+        { text: "ご飯食べたい", file: "sounds/5ちゃい/ご飯食べたい.mp3" },
+        { text: "だからさ", file: "sounds/5ちゃい/だからさ.mp3" },
+        { text: "なんかムカつくだけと", file: "sounds/5ちゃい/なんかムカつくだけと.mp3" },
+        { text: "なんだよ", file: "sounds/5ちゃい/なんだよ.mp3" },
+        { text: "パパ〜ママ", file: "sounds/5ちゃい/パパ〜ママ.mp3" },
+        { text: "やだやだやだやだやだやだ", file: "sounds/5ちゃい/やだやだやだやだやだやだ.mp3" },
+        { text: "ロリち最高", file: "sounds/5ちゃい/ロリち最高.mp3" },
+        { text: "床暖房欲しい", file: "sounds/5ちゃい/床暖房欲しい.mp3" },
+        { text: "眠い～眠たい", file: "sounds/5ちゃい/眠い～眠たい.mp3" },
+      ],
+      "メンヘラ系": [
+        { text: "20ﾋﾟーちゃいのらこちは好きじゃないですか", file: "sounds/メンヘラ系/5ちゃいのらこちが好きです？？にじゅぴーちゃいのらこちは好きじゃないですか.mp3" },
+        { text: "なんでそんなこと言うの？", file: "sounds/メンヘラ系/なんでそんなこと言うの？.mp3" },
+        { text: "もしもしポリスメン", file: "sounds/メンヘラ系/もしもしポリスメン.mp3" },
+        { text: "メンヘラらこち", file: "sounds/メンヘラ系/殺し合い(メンヘラらこち).mp3" }
+      ]
+    };
+
+    const board = document.getElementById("board");
+
+    for (let category in categories) {
+      let div = document.createElement("div");
+      div.className = "category";
+      div.innerHTML = `<h2>${category}</h2>`;
+      categories[category].forEach(line => {
+        let btn = document.createElement("button");
+        btn.className = "line-button";
+        btn.textContent = line.text;
+        btn.onclick = () => playSound(line.file);
+        div.appendChild(btn);
+      });
+      board.appendChild(div);
+    }
+
+    function playSound(file) {
+      document.querySelectorAll("audio").forEach(a => { a.pause(); a.currentTime = 0; });
+      let audio = document.getElementById(file);
+      if (!audio) {
+        audio = document.createElement("audio");
+        audio.id = file;
+        audio.src = file;
+        document.body.appendChild(audio);
+      }
+      audio.play();
+    }
+  </script>
+</body>
+</html>
