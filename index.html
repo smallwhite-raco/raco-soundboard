@@ -32,12 +32,14 @@
   }
 
   .category h2 {
+    flex: 0 0 100%;
+    display: block;
     margin-bottom: 15px;
     color: #444;
   }
 
   .line-button {
-    flex: 0 0 45%;
+    flex: 0 0 calc(50% - 20px);
     margin: 8px;
     padding: 12px;
     font-size: 15px;
@@ -70,6 +72,10 @@
     }
     body {
       padding-bottom: calc(50px + env(safe-area-inset-bottom));
+    }
+    .line-button {
+      display: inline-block;
+      width: 45%;
     }
   }
   </style>
