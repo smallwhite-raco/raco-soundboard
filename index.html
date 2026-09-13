@@ -83,7 +83,16 @@
 </head>
 <body>
   <h1>🦦💛 らこちのサウンドボード</h1>
+
+
+  <div class="search-container" style="text-align: center; margin: 20px 0;">
+    <input type="text" id="searchInput" placeholder="🔍 検索..." onkeyup="filterSounds()" 
+           style="padding: 12px 20px; width: 80%; max-width: 400px; border-radius: 25px; border: 2px solid #FFD700; font-size: 16px; outline: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+  </div>
+
+
   <div id="board"></div>
+
 
   <script>
     const categories = {
@@ -194,9 +203,9 @@
         { text: "はにゃ", file: "sounds/墓/はにゃ.mp3" },
         { text: "はにゃ (2)", file: "sounds/墓/はにゃ (2).mp3" },
         { text: "らこビーム", file: "sounds/墓/らこビーム.mp3" },
+        { text: "忘れろビーム", file: "sounds/墓/忘れろビーム.mp3" },
         { text: "忘れろビーム (2)", file: "sounds/墓/忘れろビーム (2).mp3" },
         { text: "忘れろビーム (3)", file: "sounds/墓/忘れろビーム (3).mp3" },
-        { text: "忘れろビーム", file: "sounds/墓/忘れろビーム.mp3" },
         { text: "見て見て～", file: "sounds/墓/見て見て～.mp3" },
         { text: "見て見て～ (2)", file: "sounds/墓/見て見て～ (2).mp3" },
         { text: "見て見て見て～", file: "sounds/墓/見て見て見て～.mp3" },
@@ -247,9 +256,9 @@
         { text: "ブス", file: "sounds/暴言系/ブス.mp3" },
         { text: "みんないけ！こいつに！攻撃！", file: "sounds/暴言系/みんないけ！こいつに！攻撃！.mp3" },
         { text: "入ってくんなばかぁ", file: "sounds/暴言系/入ってくんなばかぁ.mp3" },
-        { text: "大嫌い (3)", file: "sounds/暴言系/大嫌い (3).mp3" },
         { text: "大嫌い", file: "sounds/暴言系/大嫌い.mp3" },
         { text: "大嫌い (2)", file: "sounds/暴言系/大嫌い (2).mp3" },
+        { text: "大嫌い (3)", file: "sounds/暴言系/大嫌い (3).mp3" },
         { text: "ガチで大っ嫌い", file: "sounds/暴言系/ガチで大っ嫌い.mp3" },
         { text: "クソガキ", file: "sounds/暴言系/クソガキ.mp3" },
         { text: "最低", file: "sounds/暴言系/最低.mp3" },
@@ -406,6 +415,55 @@
       player.src = file;
       player.play();
     }
+
+
+    function hiraganaToKatakana(str) {
+        return str.replace(/[\u3041-\u3096]/g, match => String.fromCharCode(match.charCodeAt(0) + 0x60));
+    }
+    function katakanaToHiragana(str) {
+        return str.replace(/[\u30a1-\u30f6]/g, match => String.fromCharCode(match.charCodeAt(0) - 0x60));
+    }
+
+    function filterSounds() {
+        let input = document.getElementById('searchInput');
+        let query = input.value.toLowerCase().trim();
+        
+        let queryHiragana = katakanaToHiragana(query);
+        let queryKatakana = hiraganaToKatakana(query);
+
+        let buttons = document.getElementsByClassName('line-button');
+
+        for (let i = 0; i < buttons.length; i++) {
+            let btnText = buttons[i].textContent.toLowerCase();
+            
+            let btnHiragana = katakanaToHiragana(btnText);
+            let btnKatakana = hiraganaToKatakana(btnText);
+
+            if (btnText.indexOf(query) > -1 || 
+                btnHiragana.indexOf(queryHiragana) > -1 || 
+                btnKatakana.indexOf(queryKatakana) > -1) {
+                
+                buttons[i].style.display = "";
+            } else {
+                buttons[i].style.display = "none";
+            }
+        }
+
+        let categoriesDivs = document.getElementsByClassName('category');
+        for (let i = 0; i < categoriesDivs.length; i++) {
+            let visibleButtons = categoriesDivs[i].querySelectorAll('.line-button:not([style*="display: none"])');
+            
+            if (query === "") {
+                categoriesDivs[i].style.display = "";
+            } else if (visibleButtons.length === 0) {
+                categoriesDivs[i].style.display = "none";
+            } else {
+                categoriesDivs[i].style.display = "";
+            }
+        }
+    }
+
+
   </script>
   <audio id="globalPlayer" controls></audio>
 </body>
