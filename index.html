@@ -84,10 +84,14 @@
 <body>
   <h1>🦦💛 らこちのサウンドボード</h1>
 
-
-  <div class="search-container" style="text-align: center; margin: 20px 0;">
-    <input type="text" id="searchInput" placeholder="🔍 検索..." onkeyup="filterSounds()" 
-           style="padding: 12px 20px; width: 80%; max-width: 400px; border-radius: 25px; border: 2px solid #FFD700; font-size: 16px; outline: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+  <div class="search-wrapper" style="position: relative; width: 80%; max-width: 400px; margin: 20px auto;">
+      <input type="text" id="searchInput" placeholder="🔍 検索..." onkeyup="filterSounds()" 
+            style="padding: 12px 45px 12px 20px; width: 100%; border-radius: 25px; border: 2px solid #FFD700; font-size: 16px; outline: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1); box-sizing: border-box;">
+      
+      <span id="clearSearch" onclick="clearSearchInput()" 
+            style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); font-size: 20px; color: #999; cursor: pointer; display: none; user-select: none;">
+          ✕
+      </span>
   </div>
 
 
@@ -426,8 +430,15 @@
 
     function filterSounds() {
         let input = document.getElementById('searchInput');
+        let clearBtn = document.getElementById('clearSearch');
         let query = input.value.toLowerCase().trim();
         
+        if (input.value.length > 0) {
+            clearBtn.style.display = "block";
+        } else {
+            clearBtn.style.display = "none";
+        }
+
         let queryHiragana = katakanaToHiragana(query);
         let queryKatakana = hiraganaToKatakana(query);
 
@@ -454,13 +465,20 @@
             let visibleButtons = categoriesDivs[i].querySelectorAll('.line-button:not([style*="display: none"])');
             
             if (query === "") {
-                categoriesDivs[i].style.display = "";
+                categoriesDivs[i].style.display = ""; 
             } else if (visibleButtons.length === 0) {
-                categoriesDivs[i].style.display = "none";
+                categoriesDivs[i].style.display = "none"; 
             } else {
-                categoriesDivs[i].style.display = "";
+                categoriesDivs[i].style.display = ""; 
             }
         }
+    }
+
+    function clearSearchInput() {
+        let input = document.getElementById('searchInput');
+        input.value = "";
+        filterSounds();
+        input.focus();
     }
 
 
