@@ -92,7 +92,7 @@
 </head>
 <body>
   <h1>🦦💛 らこちのサウンドボード</h1>
-
+  <div id="stats"></div>
   <div class="search-wrapper" style="position: relative; width: 80%; max-width: 400px; margin: 20px auto;">
       <input type="text" id="searchInput" placeholder="🔍 検索..." onkeyup="filterSounds()" 
             style="padding: 12px 45px 12px 20px; width: 100%; border-radius: 25px; border: 2px solid #FFD700; font-size: 16px; outline: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1); box-sizing: border-box;">
@@ -102,7 +102,6 @@
           ✕
       </span>
   </div>
-
 
   <div id="board"></div>
 
@@ -124,11 +123,13 @@
         { text: "大好きだよ", file: "sounds/好き・大好き/大好きだよ.mp3" },
         { text: "大好きだよ (2)", file: "sounds/好き・大好き/大好きだよ (2).mp3" },
         { text: "好き、大好き、愛してるよ", file: "sounds/好き・大好き/好き、大好き、愛してるよ.mp3" },
+        { text: "らこも大好きだよ", file: "sounds/好き・大好き/らこも大好きだよ.mp3" },
         { text: "らこご主人様のこと大好き", file: "sounds/好き・大好き/らこご主人様のこと大好き.mp3" },
         { text: "らこのことだけ見ててよ、らこもらっ子のこと大好きだよ", file: "sounds/好き・大好き/らこのことだけ見ててよ、らこもらっ子のこと大好きだよ.mp3" }
       ],
       "癒し系(おやすみ・お疲れ様・よしよし・応援)": [
         { text: "いっぱい寝てね～", file: "sounds/癒し系(おやすみ・お疲れ様・よしよし・応援)/いっぱい寝てね～.mp3" },
+        { text: "いっぱい寝るんだよ～", file: "sounds/癒し系(おやすみ・お疲れ様・よしよし・応援)/いっぱい寝るんだよ～.mp3" },
         { text: "おやすみ", file: "sounds/癒し系(おやすみ・お疲れ様・よしよし・応援)/おやすみ.mp3" },
         { text: "おやすみばいばい～", file: "sounds/癒し系(おやすみ・お疲れ様・よしよし・応援)/おやすみばいばい～.mp3" },
         { text: "お疲れ様〜いっぱい休んでね〜", file: "sounds/癒し系(おやすみ・お疲れ様・よしよし・応援)/お疲れ様〜いっぱい休んでね〜.mp3" },
@@ -138,6 +139,8 @@
         { text: "みんないい子だね〜 (2)", file: "sounds/癒し系(おやすみ・お疲れ様・よしよし・応援)/みんないい子だね〜 (2).mp3" },
         { text: "みんながんばっててえらい", file: "sounds/癒し系(おやすみ・お疲れ様・よしよし・応援)/みんながんばっててえらい.mp3" },
         { text: "みんなばいばい～", file: "sounds/癒し系(おやすみ・お疲れ様・よしよし・応援)/みんなばいばい～.mp3" },
+        { text: "ばいばい～おやすみ", file: "sounds/癒し系(おやすみ・お疲れ様・よしよし・応援)/ばいばい～おやすみ.mp3" },
+        { text: "もういい～ばいばい", file: "sounds/癒し系(おやすみ・お疲れ様・よしよし・応援)/もういい～ばいばい.mp3" },
         { text: "よしよしヾ(・ω・｀)", file: "sounds/癒し系(おやすみ・お疲れ様・よしよし・応援)/よしよしヾ(・ω・｀).mp3" },
         { text: "月曜日からがんばっててえらい", file: "sounds/癒し系(おやすみ・お疲れ様・よしよし・応援)/月曜日からがんばっててえらい.mp3" },
         { text: "仕事の人、学校の人、頑張ってね〜", file: "sounds/癒し系(おやすみ・お疲れ様・よしよし・応援)/仕事の人、学校の人、頑張ってね〜.mp3" },
@@ -172,6 +175,12 @@
         { text: "はぁ？", file: "sounds/日常系/はぁ？.mp3" },
         { text: "やった", file: "sounds/日常系/やった.mp3" },
         { text: "よっしゃ", file: "sounds/日常系/よっしゃ.mp3" },
+        { text: "あぁぁぁああ", file: "sounds/日常系/あぁぁぁああ.mp3" },
+        { text: "あれ", file: "sounds/日常系/あれ.mp3" },
+        { text: "いいもん", file: "sounds/日常系/いいもん.mp3" },
+        { text: "いや！こわい", file: "sounds/日常系/いや！こわい.mp3" },
+        { text: "いや…そんなことは…", file: "sounds/日常系/いや…そんなことは….mp3" },
+        { text: "びっくりしちゃった", file: "sounds/日常系/びっくりしちゃった.mp3" },
         { text: "違う", file: "sounds/日常系/違う.mp3" },
         { text: "明日は月曜日やで", file: "sounds/日常系/明日は月曜日やで.mp3" },
         { text: "君にドパをおすそ分け", file: "sounds/日常系/君にドパをおすそ分け.mp3" },
@@ -248,6 +257,7 @@
         { text: "ざぁーこ (3)", file: "sounds/暴言系/ざぁーこ (3).mp3" },
         { text: "ざこざこざこざこ", file: "sounds/暴言系/ざこざこざこざこ.mp3" },
         { text: "ねぇ", file: "sounds/暴言系/ねぇ.mp3" },
+        { text: "あほ、ばか", file: "sounds/暴言系/あほ、ばか.mp3" },
         { text: "ばか", file: "sounds/暴言系/ばか.mp3" },
         { text: "ばか (2)", file: "sounds/暴言系/ばか (2).mp3" },
         { text: "ばか (3)", file: "sounds/暴言系/ばか (3).mp3" },
@@ -293,6 +303,7 @@
         { text: "なんで虐めてくるわけ？", file: "sounds/5ちゃい/だからさ.mp3" },
         { text: "なんかムカつくだけと", file: "sounds/5ちゃい/なんかムカつくだけと.mp3" },
         { text: "なんだよ", file: "sounds/5ちゃい/なんだよ.mp3" },
+        { text: "お姉ちゃん", file: "sounds/5ちゃい/お姉ちゃん.mp3" },
         { text: "パパ〜ママ", file: "sounds/5ちゃい/パパ〜ママ.mp3" },
         { text: "やだやだやだやだやだやだ", file: "sounds/5ちゃい/やだやだやだやだやだやだ.mp3" },
         { text: "スタンプ貰った", file: "sounds/5ちゃい/スタンプ貰った.mp3" },
@@ -300,6 +311,9 @@
         { text: "ロリち最高", file: "sounds/5ちゃい/ロリち最高.mp3" },
         { text: "床暖房欲しい", file: "sounds/5ちゃい/床暖房欲しい.mp3" },
         { text: "眠い～眠たい", file: "sounds/5ちゃい/眠い～眠たい.mp3" },
+        { text: "らこお家帰るの", file: "sounds/5ちゃい/らこお家帰るの.mp3" },
+        { text: "らこ虐", file: "sounds/5ちゃい/らこ虐.mp3" },
+        { text: "泣き声", file: "sounds/5ちゃい/泣き声.mp3" },
         { text: "誕生日にらっこのぬいぐるみ貰ったんだ", file: "sounds/5ちゃい/誕生日にらっこのぬいぐるみ貰ったんだ.mp3" }
       ],
       "メンヘラ系": [
@@ -386,6 +400,7 @@
         { text: "急に虐めですか？", file: "sounds/その他/急に虐めですか？.mp3" },
         { text: "誰？お前誰だ？", file: "sounds/その他/誰？お前誰だ？.mp3" },
         { text: "ののの触覚ぺろぺろしたいでち", file: "sounds/その他/ののの触覚ぺろぺろしたいでち.mp3" },
+        { text: "いい脚をありがとうございます", file: "sounds/その他/いい脚をありがとうございます.mp3" },
         { text: "ニート最高！", file: "sounds/その他/ニート最高！.mp3" },
         { text: "らこはこんなキャラじゃないにゃん", file: "sounds/その他/らこはこんなキャラじゃないにゃん.mp3" },
         { text: "はーい！わん", file: "sounds/その他/はーい！わん.mp3" },
@@ -403,7 +418,8 @@
         { text: "💩", file: "sounds/その他/💩.mp3" },
         { text: "💩 (2)", file: "sounds/その他/💩 (2).mp3" },
         { text: "💩 (3)", file: "sounds/その他/💩 (3).mp3" },
-        { text: "💩 (4)", file: "sounds/その他/💩 (4).mp3" }
+        { text: "💩 (4)", file: "sounds/その他/💩 (4).mp3" },
+        { text: "💩 (5)", file: "sounds/その他/💩 (5).mp3" }
       ]
     };
 
@@ -422,6 +438,14 @@
       });
       board.appendChild(div);
     }
+
+
+    const totalCount = Object.values(categories)
+      .reduce((sum, category) => sum + category.length, 0);
+
+    document.getElementById("stats").textContent =
+      `🦦💛 収録ボイス数: ${totalCount}`;
+
 
     function playSound(file) {
       const player = document.getElementById("globalPlayer");
