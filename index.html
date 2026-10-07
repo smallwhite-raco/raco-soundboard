@@ -9,7 +9,7 @@
 
   <meta name="keywords" content="らこち,らこち サウンドボード,音ノ瀬らこ サウンドボード,らこち ボイス,らこち セリフ,らこち 5ちゃい,らこち メンヘラ,らこち 暴言,らこち おやすみ,らこち 目覚まし,らこち 墓">
 
-  <meta property="og:title" content="らこち サウンドボード">
+  <meta property="og:title" content="音ノ瀬らこ サウンドボード">
   <meta property="og:description" content="らこちのボイス・セリフをまとめた非公式サウンドボード">
 
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -40,11 +40,17 @@
     justify-content: center;
   }
 
-  .category h2 {
-    flex: 0 0 100%;
-    display: block;
-    margin-bottom: 15px;
+  summary {
+    font-size: 22px;
+    font-weight: bold;
     color: #444;
+    cursor: pointer;
+    list-style: none;
+    margin-bottom: 15px;
+  }
+
+  summary:hover {
+    color: #ff9900;
   }
 
   .line-button {
@@ -62,6 +68,56 @@
   .line-button:hover {
     background: #ffe066;
     transform: scale(1.05);
+  }
+
+  .hint {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 15px;
+  }
+  
+  summary {
+    font-size: 20px;
+    font-weight: bold;
+    color: #444;
+    cursor: pointer;
+    padding: 8px;
+    user-select: none;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  summary:hover {
+    color: #ff9900;
+  }
+  
+  summary::before {
+    content: "▸ ";
+  }
+  
+  details[open] summary::before {
+    content: "▾ ";
+  }
+
+  #randomBtn{
+    padding:10px 18px;
+    border:none;
+    border-radius:20px;
+    background:#ffd43b;
+    cursor:pointer;
+    font-size:15px;
+    margin-bottom:15px;
+  }
+
+  #randomBtn:hover{
+    background:#fcc419;
+  }
+
+  #nowPlaying{
+    font-size:14px;
+    color:#666;
+    margin-bottom:10px;
   }
 
   #globalPlayer {
@@ -101,6 +157,18 @@
             style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); font-size: 20px; color: #999; cursor: pointer; display: none; user-select: none;">
           ✕
       </span>
+  </div>
+
+  <div id="nowPlaying">
+    🎵 未再生
+  </div>
+
+  <button id="randomBtn" onclick="randomSound()">
+    🎲 ランダムボイス
+  </button>
+
+  <div class="hint">
+  👇 分類名稱をタップして展開
   </div>
 
   <div id="board"></div>
@@ -536,15 +604,30 @@
 
     const board = document.getElementById("board");
 
+    let first = true;
+
     for (let category in categories) {
-      let div = document.createElement("div");
+      let div = document.createElement("details");
+
+      if (first) {
+        div.open = true;
+        first = false;
+      }
       div.className = "category";
-      div.innerHTML = `<h2>${category}</h2>`;
+      div.innerHTML = `
+        <summary>
+          ${category} (${categories[category].length})
+        </summary>
+      `;
       categories[category].forEach(line => {
         let btn = document.createElement("button");
         btn.className = "line-button";
         btn.textContent = line.text;
-        btn.onclick = () => playSound(line.file);
+        btn.onclick = () => {
+          playSound(line.file);
+          document.getElementById("nowPlaying")
+          .textContent = `🎵 ${line.text}`;
+        };
         div.appendChild(btn);
       });
       board.appendChild(div);
@@ -614,15 +697,28 @@
                 categoriesDivs[i].style.display = "none"; 
             } else {
                 categoriesDivs[i].style.display = ""; 
+                categoriesDivs[i].open = true;
             }
         }
     }
 
     function clearSearchInput() {
-        let input = document.getElementById('searchInput');
-        input.value = "";
-        filterSounds();
-        input.focus();
+      let input = document.getElementById('searchInput');
+      input.value = "";
+      filterSounds();
+      input.focus();
+      document.querySelectorAll("details.category").forEach((d, index) => {
+        d.open = index === 0;
+      });
+    }
+
+    function randomSound() {
+      const allVoices = Object.values(categories).flat();
+      const randomVoice =
+      allVoices[Math.floor(Math.random() * allVoices.length)];
+      playSound(randomVoice.file);
+      document.getElementById("nowPlaying").textContent =
+      `🎵 再生中： ${randomVoice.text}`;
     }
 
 
