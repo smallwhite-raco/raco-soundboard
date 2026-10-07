@@ -40,19 +40,6 @@
     justify-content: center;
   }
 
-  summary {
-    font-size: 22px;
-    font-weight: bold;
-    color: #444;
-    cursor: pointer;
-    list-style: none;
-    margin-bottom: 15px;
-  }
-
-  summary:hover {
-    color: #ff9900;
-  }
-
   .line-button {
     flex: 0 0 calc(50% - 20px);
     margin: 8px;
@@ -70,12 +57,6 @@
     transform: scale(1.05);
   }
 
-  .hint {
-    color: #666;
-    font-size: 14px;
-    margin-bottom: 15px;
-  }
-  
   summary {
     font-size: 20px;
     font-weight: bold;
@@ -100,18 +81,38 @@
     content: "▾ ";
   }
 
-  #randomBtn{
-    padding:10px 18px;
-    border:none;
-    border-radius:20px;
-    background:#ffd43b;
-    cursor:pointer;
-    font-size:15px;
+  .top-actions{
+    display:flex;
+    justify-content:center;
+    gap:10px;
     margin-bottom:15px;
   }
 
-  #randomBtn:hover{
-    background:#fcc419;
+  #randomBtn{
+    padding:10px 15px;
+    border:none;
+    border-radius:20px;
+    cursor:pointer;
+    background:#ffd43b;
+  }
+
+  #favoriteBtn{
+    padding:10px 15px;
+    border:none;
+    border-radius:20px;
+    cursor:pointer;
+    background:#ffe8cc;
+  }
+
+  .fav-star{
+    float:right;
+    cursor:pointer;
+    margin-left:5px;
+  }
+
+  #favoriteBtn.active{
+    background:hsl(0, 100%, 50%);
+    color:#fff;
   }
 
   #nowPlaying{
@@ -163,18 +164,25 @@
     🎵 未再生
   </div>
 
-  <button id="randomBtn" onclick="randomSound()">
+  <div class="top-actions">
+    <button id="randomBtn" onclick="randomSound()">
     🎲 ランダムボイス
-  </button>
-
-  <div class="hint">
-  👇 分類名稱をタップして展開
+    </button>
+  
+    <button id="favoriteBtn" onclick="toggleFavorites()">
+    ⭐ お気に入り
+    </button>
   </div>
 
   <div id="board"></div>
 
 
   <script>
+    let favorites =
+      JSON.parse(localStorage.getItem("favorites") || "[]");
+
+    let showFavoritesOnly = false;
+
     const categories = {
       "好き・大好き": [
         { text: "らっ子のみんな...！大好きだよ", file: "sounds/好き・大好き/らっ子のみんな...！大好きだよ.mp3" },
@@ -622,17 +630,64 @@
       categories[category].forEach(line => {
         let btn = document.createElement("button");
         btn.className = "line-button";
-        btn.textContent = line.text;
+        btn.dataset.file = line.file;
+        btn.innerHTML = `
+        ${line.text}
+
+        <span class="fav-star">
+        ${favorites.includes(line.file) ? "★" : "☆"}
+        </span>
+        `;
+
+        const star = btn.querySelector(".fav-star");
+        star.onclick = (e) => {
+          e.stopPropagation();
+          if (favorites.includes(line.file)) {
+            favorites =
+              favorites.filter(f => f !== line.file);
+            star.textContent = "☆";
+          } else {
+            favorites.push(line.file);
+            star.textContent = "★";
+          }
+          localStorage.setItem(
+            "favorites",
+            JSON.stringify(favorites)
+          );
+          updateFilters();
+        };
+
         btn.onclick = () => {
           playSound(line.file);
           document.getElementById("nowPlaying")
-          .textContent = `🎵 ${line.text}`;
+          .textContent = `🎵 再生中： ${line.text}`;
         };
         div.appendChild(btn);
       });
       board.appendChild(div);
     }
 
+  
+    function toggleFavorites() {
+    
+      showFavoritesOnly =
+        !showFavoritesOnly;
+      
+      const btn =
+        document.getElementById("favoriteBtn");
+      
+      btn.textContent =
+        showFavoritesOnly
+        ? "★ お気に入り"
+        : "☆ お気に入り";
+      
+      btn.classList.toggle(
+        "active",
+        showFavoritesOnly
+      );
+      
+      updateFilters();
+    }
 
     const totalCount = Object.values(categories)
       .reduce((sum, category) => sum + category.length, 0);
@@ -655,51 +710,87 @@
         return str.replace(/[\u30a1-\u30f6]/g, match => String.fromCharCode(match.charCodeAt(0) - 0x60));
     }
 
-    function filterSounds() {
-        let input = document.getElementById('searchInput');
-        let clearBtn = document.getElementById('clearSearch');
-        let query = input.value.toLowerCase().trim();
-        
-        if (input.value.length > 0) {
-            clearBtn.style.display = "block";
-        } else {
-            clearBtn.style.display = "none";
-        }
+
+    function updateFilters() {
+
+        let query =
+            document.getElementById("searchInput")
+            .value
+            .toLowerCase()
+            .trim();
 
         let queryHiragana = katakanaToHiragana(query);
         let queryKatakana = hiraganaToKatakana(query);
 
-        let buttons = document.getElementsByClassName('line-button');
+        const buttons =
+            document.querySelectorAll(".line-button");
 
-        for (let i = 0; i < buttons.length; i++) {
-            let btnText = buttons[i].textContent.toLowerCase();
-            
-            let btnHiragana = katakanaToHiragana(btnText);
-            let btnKatakana = hiraganaToKatakana(btnText);
+        buttons.forEach(btn => {
 
-            if (btnText.indexOf(query) > -1 || 
-                btnHiragana.indexOf(queryHiragana) > -1 || 
-                btnKatakana.indexOf(queryKatakana) > -1) {
-                
-                buttons[i].style.display = "";
+            const file = btn.dataset.file;
+
+            const btnText =
+                btn.textContent.toLowerCase();
+
+            const btnHiragana =
+                katakanaToHiragana(btnText);
+
+            const btnKatakana =
+                hiraganaToKatakana(btnText);
+
+            const matchSearch =
+                btnText.includes(query) ||
+                btnHiragana.includes(queryHiragana) ||
+                btnKatakana.includes(queryKatakana);
+
+            const matchFavorite =
+                !showFavoritesOnly ||
+                favorites.includes(file);
+
+            btn.style.display =
+                (matchSearch && matchFavorite)
+                ? ""
+                : "none";
+        });
+
+        document
+        .querySelectorAll("details.category")
+        .forEach(category => {
+
+            const visibleButtons =
+                category.querySelectorAll(
+                    '.line-button:not([style*="display: none"])'
+                );
+
+            if (visibleButtons.length === 0) {
+
+                category.style.display = "none";
+
             } else {
-                buttons[i].style.display = "none";
-            }
-        }
 
-        let categoriesDivs = document.getElementsByClassName('category');
-        for (let i = 0; i < categoriesDivs.length; i++) {
-            let visibleButtons = categoriesDivs[i].querySelectorAll('.line-button:not([style*="display: none"])');
-            
-            if (query === "") {
-                categoriesDivs[i].style.display = ""; 
-            } else if (visibleButtons.length === 0) {
-                categoriesDivs[i].style.display = "none"; 
-            } else {
-                categoriesDivs[i].style.display = ""; 
-                categoriesDivs[i].open = true;
+                category.style.display = "";
+
+                if (query !== "") {
+                    category.open = true;
+                }
             }
-        }
+        });
+    }
+
+    function filterSounds() {
+    
+      let input =
+        document.getElementById("searchInput");
+      
+      let clearBtn =
+        document.getElementById("clearSearch");
+      
+      clearBtn.style.display =
+        input.value.length > 0
+        ? "block"
+        : "none";
+      
+      updateFilters();
     }
 
     function clearSearchInput() {
