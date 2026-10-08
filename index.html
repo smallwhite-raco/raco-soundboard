@@ -687,6 +687,17 @@
       );
       
       updateFilters();
+
+      if (!showFavoritesOnly) {
+
+        document
+        .querySelectorAll("details.category")
+        .forEach((d, index) => {
+
+            d.open = (index === 0);
+
+        });
+      }
     }
 
     const totalCount = Object.values(categories)
@@ -770,12 +781,16 @@
 
                 category.style.display = "";
 
-                if (query !== "") {
-                    category.open = true;
+                if (
+                  query !== "" ||
+                  showFavoritesOnly
+                ) {
+                  category.open = true;
                 }
             }
         });
     }
+
 
     function filterSounds() {
     
@@ -811,6 +826,18 @@
       document.getElementById("nowPlaying").textContent =
       `🎵 再生中： ${randomVoice.text}`;
     }
+
+    window.onload = () => {
+
+      document
+      .querySelectorAll("details.category")
+      .forEach((d, index) => {
+
+          d.open = (index === 0);
+
+      });
+
+    };
 
 
   </script>
