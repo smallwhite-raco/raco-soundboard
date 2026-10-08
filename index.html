@@ -111,14 +111,34 @@
   }
 
   #favoriteBtn.active{
-    background:hsl(0, 100%, 50%);
-    color:#fff;
+    background:#ffc94d;
+    color:#333;
   }
 
   #nowPlaying{
     font-size:14px;
     color:#666;
     margin-bottom:10px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:8px;
+  }
+
+  #quickFavBtn{
+    border:none;
+    background:#fff0b3;
+    color:#ffb700;
+    width:32px;
+    height:32px;
+    border-radius:50%;
+    cursor:pointer;
+    font-size:18px;
+    transition:0.2s;
+  }
+
+  #quickFavBtn:hover{
+    transform:scale(1.15);
   }
 
   #globalPlayer {
@@ -161,7 +181,13 @@
   </div>
 
   <div id="nowPlaying">
-    🎵 未再生
+    <button id="quickFavBtn"
+          onclick="favoriteCurrent()">
+      🤍
+    </button>
+    <span id="nowPlayingText">
+      🎵 未再生
+    </span>
   </div>
 
   <div class="top-actions">
@@ -170,7 +196,7 @@
     </button>
   
     <button id="favoriteBtn" onclick="toggleFavorites()">
-    ⭐ お気に入り
+    💛 お気に入り
     </button>
   </div>
 
@@ -182,6 +208,8 @@
       JSON.parse(localStorage.getItem("favorites") || "[]");
 
     let showFavoritesOnly = false;
+    let currentPlayingFile = null;
+    
 
     const categories = {
       "好き・大好き": [
@@ -631,11 +659,12 @@
         let btn = document.createElement("button");
         btn.className = "line-button";
         btn.dataset.file = line.file;
+        btn.dataset.text = line.text;
         btn.innerHTML = `
         ${line.text}
 
         <span class="fav-star">
-        ${favorites.includes(line.file) ? "★" : "☆"}
+        ${favorites.includes(line.file) ? "💛" : "🤍"}
         </span>
         `;
 
@@ -645,21 +674,22 @@
           if (favorites.includes(line.file)) {
             favorites =
               favorites.filter(f => f !== line.file);
-            star.textContent = "☆";
+            star.textContent = "🤍";
           } else {
             favorites.push(line.file);
-            star.textContent = "★";
+            star.textContent = "💛";
           }
           localStorage.setItem(
             "favorites",
             JSON.stringify(favorites)
           );
+          updateFavoriteButton();
           updateFilters();
         };
 
         btn.onclick = () => {
           playSound(line.file);
-          document.getElementById("nowPlaying")
+          document.getElementById("nowPlayingText")
           .textContent = `🎵 再生中： ${line.text}`;
         };
         div.appendChild(btn);
@@ -667,25 +697,92 @@
       board.appendChild(div);
     }
 
-  
+    function updateFavoriteButton() {
+
+      const btn =
+          document.getElementById("favoriteBtn");
+
+      const count = favorites.length;
+
+      btn.textContent =
+          (showFavoritesOnly ? "💛" : "🤍")
+          + ` お気に入り (${count})`;
+    }
+    
+
+    function updateQuickFavButton() {
+
+      const btn =
+          document.getElementById("quickFavBtn");
+
+      if (!currentPlayingFile) {
+          btn.textContent = "🤍";
+          return;
+      }
+
+      btn.textContent =
+          favorites.includes(currentPlayingFile)
+          ? "💛"
+          : "🤍";
+    }
+
+    function favoriteCurrent() {
+
+        if (!currentPlayingFile) return;
+
+        if (favorites.includes(currentPlayingFile)) {
+
+            favorites =
+                favorites.filter(
+                    f => f !== currentPlayingFile
+                );
+
+        } else {
+
+            favorites.push(currentPlayingFile);
+
+        }
+
+        localStorage.setItem(
+            "favorites",
+            JSON.stringify(favorites)
+        );
+
+        updateFavoriteButton();
+        updateQuickFavButton();
+        updateFilters();
+
+        document
+        .querySelectorAll(".fav-star")
+        .forEach(star => {
+
+            const btn =
+                star.closest(".line-button");
+
+            if (!btn) return;
+
+            star.textContent =
+                favorites.includes(btn.dataset.file)
+                ? "💛"
+                : "🤍";
+        });
+    }
+
+
     function toggleFavorites() {
     
       showFavoritesOnly =
         !showFavoritesOnly;
       
-      const btn =
-        document.getElementById("favoriteBtn");
+      document
+        .getElementById("favoriteBtn")
+        .classList.toggle(
+            "active",
+            showFavoritesOnly
+        );
       
-      btn.textContent =
-        showFavoritesOnly
-        ? "★ お気に入り"
-        : "☆ お気に入り";
-      
-      btn.classList.toggle(
-        "active",
-        showFavoritesOnly
-      );
-      
+      updateFavoriteButton();
+
       updateFilters();
 
       if (!showFavoritesOnly) {
@@ -706,8 +803,14 @@
     document.getElementById("stats").textContent =
       `🦦💛 収録ボイス数: ${totalCount}`;
 
+    updateFavoriteButton();
 
     function playSound(file) {
+
+      currentPlayingFile = file;
+
+      updateQuickFavButton();
+
       const player = document.getElementById("globalPlayer");
       player.src = file;
       player.play();
@@ -741,7 +844,7 @@
             const file = btn.dataset.file;
 
             const btnText =
-                btn.textContent.toLowerCase();
+                btn.dataset.text.toLowerCase();
 
             const btnHiragana =
                 katakanaToHiragana(btnText);
@@ -769,9 +872,8 @@
         .forEach(category => {
 
             const visibleButtons =
-                category.querySelectorAll(
-                    '.line-button:not([style*="display: none"])'
-                );
+                [...category.querySelectorAll(".line-button")]
+                .filter(btn => btn.style.display !== "none");
 
             if (visibleButtons.length === 0) {
 
@@ -823,7 +925,7 @@
       const randomVoice =
       allVoices[Math.floor(Math.random() * allVoices.length)];
       playSound(randomVoice.file);
-      document.getElementById("nowPlaying").textContent =
+      document.getElementById("nowPlayingText").textContent =
       `🎵 再生中： ${randomVoice.text}`;
     }
 
